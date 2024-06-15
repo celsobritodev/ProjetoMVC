@@ -29,11 +29,6 @@ public class VeterinarioServlet extends HttpServlet {
 		PrintWriter pw = response.getWriter();
 		Gson gson = new Gson();
 		String json = "";
-		
-		String logica = request.getParameter("logica");	
-		if(logica!=null) {
-			switch(logica) {
-			case "veterinario":{
 		try {
 
 			Connection con = ConexaoSingleton.getConexao();
@@ -74,55 +69,8 @@ public class VeterinarioServlet extends HttpServlet {
 		}
 	}
 
-	/*
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		PrintWriter pw = response.getWriter();
-		Gson gson = new Gson();
-		String json = "";
-		try {
-
-			Connection con = ConexaoSingleton.getConexao();
-			ColecaoDeVeterinario cv = new ColecaoDeVeterinarioEmBDR(con);
-
-			String strId = request.getParameter("id");
-			String crmv = request.getParameter("crmv");
-
-			if (strId != null) {
-				int id = Integer.parseInt(strId);
-				Veterinario v = cv.porId(id);
-				if (v != null) {
-					json = gson.toJson(v);
-					response.setStatus(200);
-					pw.append(json);
-				}
-			} else if (crmv != null) {
-				Veterinario v = cv.porCrmv(crmv);
-				if (v != null) {
-					json = gson.toJson(v);
-					response.setStatus(200);
-					pw.append(json);
-				}
-			} else {
-				List<Veterinario> lv = cv.todos();
-				json = gson.toJson(lv);
-				response.setStatus(200);
-				pw.append(json);
-			}
-
-		} catch (ConexaoException e) {
-			response.setStatus(500);
-			pw.append("Erro ao estabelecer conexao com o banco de dados");
-		} catch (ColecaoException e) {
-			response.setStatus(500);
-			pw.append("Erro ao realizar operacao no banco de dados");
-		
-		}
-	}
-
-*/	
+	
+	
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

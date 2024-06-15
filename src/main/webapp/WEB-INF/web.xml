@@ -5,7 +5,7 @@
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
   
-   <servlet>
+  <servlet>
     <description></description>
     <servlet-name>VeterinarioServlet</servlet-name>
     <servlet-class>controller.VeterinarioServlet</servlet-class>
@@ -15,5 +15,15 @@
     <url-pattern>/veterinario</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <description></description>
+    <display-name>Servlet</display-name>
+    <servlet-name>Servlet</servlet-name>
+    <servlet-class>controller.Servlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/servlet</url-pattern>
+  </servlet-mapping>
   
 </web-app>
