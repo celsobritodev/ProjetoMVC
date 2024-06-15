@@ -4,7 +4,6 @@
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
-  
   <servlet>
     <description></description>
     <servlet-name>VeterinarioServlet</servlet-name>
@@ -14,7 +13,6 @@
     <servlet-name>VeterinarioServlet</servlet-name>
     <url-pattern>/veterinario</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <description></description>
     <display-name>Servlet</display-name>
@@ -25,5 +23,24 @@
     <servlet-name>Servlet</servlet-name>
     <url-pattern>/servlet</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <description></description>
+    <display-name>AtendenteServlet</display-name>
+    <servlet-name>AtendenteServlet</servlet-name>
+    <servlet-class>controller.AtendenteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AtendenteServlet</servlet-name>
+    <url-pattern>/atendente</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>SecretarioServlet</display-name>
+    <servlet-name>SecretarioServlet</servlet-name>
+    <servlet-class>controller.SecretarioServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SecretarioServlet</servlet-name>
+    <url-pattern>/secretario</url-pattern>
+  </servlet-mapping>
 </web-app>
