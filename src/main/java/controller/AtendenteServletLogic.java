@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -11,50 +10,47 @@ import com.google.gson.Gson;
 import exception.ColecaoException;
 import exception.ConexaoException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Veterinario;
-import persistency.collection.ColecaoDeVeterinario;
-import persistency.collection.ColecaoDeVeterinarioEmBDR;
+import model.Atendente;
+import persistency.collection.ColecaoDeAtendente;
+import persistency.collection.ColecaoDeAtendenteEmBDR;
 import persistency.connection.ConexaoSingleton;
+import util.ServletUtil;
 
-public class VeterinarioServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class AtendenteServletLogic implements ServletLogic {
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
+	public void buscar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter pw = response.getWriter();
 		Gson gson = new Gson();
 		String json = "";
 		try {
 
 			Connection con = ConexaoSingleton.getConexao();
-			ColecaoDeVeterinario cv = new ColecaoDeVeterinarioEmBDR(con);
+			ColecaoDeAtendente ca = new ColecaoDeAtendenteEmBDR(con);
 
 			String strId = request.getParameter("id");
-			String crmv = request.getParameter("crmv");
+			String codAtend = request.getParameter("codAtend");
 
 			if (strId != null) {
 				int id = Integer.parseInt(strId);
-				Veterinario v = cv.porId(id);
-				if (v != null) {
-					json = gson.toJson(v);
+				Atendente a = ca.porId(id);
+				if (a != null) {
+					json = gson.toJson(a);
 					response.setStatus(200);
 					pw.append(json);
 				}
-			} else if (crmv != null) {
-				Veterinario v = cv.porCrmv(crmv);
-				if (v != null) {
-					json = gson.toJson(v);
+			} else if (codAtend != null) {
+				Atendente a = ca.porCodAtend(Integer.parseInt(codAtend));
+				if (a != null) {
+					json = gson.toJson(a);
 					response.setStatus(200);
 					pw.append(json);
 				}
 			} else {
-				List<Veterinario> lv = cv.todos();
-				json = gson.toJson(lv);
+				List<Atendente> la = ca.todos();
+				json = gson.toJson(la);
 				response.setStatus(200);
 				pw.append(json);
 			}
@@ -67,31 +63,27 @@ public class VeterinarioServlet extends HttpServlet {
 			pw.append("Erro ao realizar operacao no banco de dados");
 		
 		}
+		
 	}
 
-	
-	
-	
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
+	public void inserir(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter pw = response.getWriter();
 		Gson gson = new Gson();
-		String json = this.getCorpoReq(request);
+		String json = ServletUtil.getCorpoReq(request);
 
 		try {
 			Connection con = ConexaoSingleton.getConexao();
-			ColecaoDeVeterinario cv = new ColecaoDeVeterinarioEmBDR(con);
+			ColecaoDeAtendente ca = new ColecaoDeAtendenteEmBDR(con);
 
 			if (json != "") {
-				Veterinario v = gson.fromJson(json, Veterinario.class);
-				cv.inserir(v);
+				Atendente a = gson.fromJson(json, Atendente.class);
+				ca.inserir(a);
 				response.setStatus(200);
 
 			} else {
 				response.setStatus(400);
-				pw.append("Dados do veterinario não informados!");
+				pw.append("Dados do atendente não informados!");
 			}
 
 		} catch (ConexaoException e) {
@@ -101,28 +93,27 @@ public class VeterinarioServlet extends HttpServlet {
 			response.setStatus(500);
 			pw.append("Erro ao realizar operacao no banco de dados");
 		}
+		
 	}
 
 	@Override
-	protected void doPut(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
+	public void alterar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter pw = response.getWriter();
 		Gson gson = new Gson();
-		String json = this.getCorpoReq(request);
+		String json = ServletUtil.getCorpoReq(request);
 
 		try {
 			Connection con = ConexaoSingleton.getConexao();
-			ColecaoDeVeterinario cv = new ColecaoDeVeterinarioEmBDR(con);
+			ColecaoDeAtendente ca = new ColecaoDeAtendenteEmBDR(con);
 
 			if (json != "") {
-				Veterinario v = gson.fromJson(json, Veterinario.class);
-				cv.alterar(v);
+				Atendente a = gson.fromJson(json, Atendente.class);
+				ca.alterar(a);
 				response.setStatus(200);
 
 			} else {
 				response.setStatus(400);
-				pw.append("Dados do veterinario não informados!");
+				pw.append("Dados do atendente não informados!");
 			}
 
 		} catch (ConexaoException e) {
@@ -132,32 +123,29 @@ public class VeterinarioServlet extends HttpServlet {
 			response.setStatus(500);
 			pw.append("Erro ao realizar operacao no banco de dados");
 		}
-
+		
 	}
-	
-	
 
 	@Override
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
+	public void remover(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter pw = response.getWriter();
 
 		try {
 			Connection con = ConexaoSingleton.getConexao();
-			ColecaoDeVeterinario cv = new ColecaoDeVeterinarioEmBDR(con);
+			ColecaoDeAtendente ca = new ColecaoDeAtendenteEmBDR(con);
 
 			String strId = request.getParameter("id");
 
 			if (strId != null) {
 				int id = Integer.parseInt(strId);
-				Veterinario v = new Veterinario(id);
-				cv.remover(v);
+				Atendente a = new Atendente(id);
+				ca.remover(a);
 				response.setStatus(200);
 			} else {
 				response.setStatus(400);
-				pw.append("Id do veterinario não informado!");
+				pw.append("Id do atendenteveterinario não informado!");
 			}
+
 		} catch (ConexaoException e) {
 			response.setStatus(500);
 			pw.append("Erro ao estabelecer conexao com o banco de dados");
@@ -165,17 +153,7 @@ public class VeterinarioServlet extends HttpServlet {
 			response.setStatus(500);
 			pw.append("Erro ao realizar operacao no banco de dados");
 		}
-	}
-
-	private String getCorpoReq(HttpServletRequest request) throws IOException {
-		BufferedReader br = request.getReader();
-		String str, corpo = "";
-		str = br.readLine();
-		while (str != null) {
-			corpo += str;
-			str = br.readLine();
-		}
-		return corpo;
+		
 	}
 
 }

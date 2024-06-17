@@ -43,4 +43,18 @@
     <servlet-name>SecretarioServlet</servlet-name>
     <url-pattern>/secretario</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+   <servlet-name>ServletGeral</servlet-name>
+   <servlet-class>cotroller.Servlet</servlet-class>
+  </servlet>
+  
+ <servlet-mapping> 
+  <servlet-name>ServletGeral</servlet-name>
+  <url-pattern>/api</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  
 </web-app>

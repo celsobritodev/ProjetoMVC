@@ -1,116 +1,72 @@
 package controller;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import other.AtendenteLogica;
-import other.SecretarioLogica;
-import other.VeterinarioLogica;
-import java.io.IOException;
 
-/**
- * Servlet implementation class Servlet
- */
 public class Servlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		String logica = request.getParameter("logica");
-
-		if (logica != null)
-
-			switch (logica) {
-			case "veterinario": {
-			     VeterinarioLogica.get(request,response);
-			 	break;
-				}
-			case "atendente": {
-			     AtendenteLogica.get(request,response);
-			     break;
-				}
-			case "secretario": {
-			    SecretarioLogica.get(request,response);
-				break;
-			    }
+	private ServletLogic invocarLogica ( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+		
+		String logica  = request.getParameter("logica");
+		ServletLogic logic = null;
+		if(logica!=null) {
+			String nomeClasse = logica +"ServletLogic";
+			String nomeCompletoDaClasse = "controller."+nomeClasse;
+			try {
+				Class<?> classe = Class.forName(nomeCompletoDaClasse);
+				logic = (ServletLogic) (classe.getDeclaredConstructor().newInstance());
+					
+			} catch (ClassNotFoundException e) {
+				throw new ServletException ("A lógica informada não é válida!");
+			} catch (InstantiationException e) {
+				throw new ServletException (e);
+			} catch (IllegalAccessException e) {
+				throw new ServletException(e);
+			} catch (NoSuchMethodException e) {
+				throw new ServletException(e); 
+			} catch (InvocationTargetException e) {
+				throw new ServletException (e);
 			}
-			
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-
-		String logica = request.getParameter("logica");
-
-		if (logica != null)
-			switch (logica) {
-			case "veterinario": {
-			     VeterinarioLogica.post(request,response);
-			 	break;
-				}
-			case "atendente": {
-			     AtendenteLogica.post(request,response);
-			     break;
-				}
-			case "secretario": {
-			    SecretarioLogica.post(request,response);
-				break;
-			    }
-			
-			}
-	}
-
-	protected void doPut(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		String logica = request.getParameter("logica");
-
-		if (logica != null)
-			switch (logica) {
-			case "veterinario": {
-			     VeterinarioLogica.put(request,response);
-			 	break;
-				}
-			case "atendente": {
-			     AtendenteLogica.put(request,response);
-			     break;
-				}
-			case "secretario": {
-			    SecretarioLogica.put(request,response);
-				break;
-			    }
-			
-			}
-	}
-
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		String logica = request.getParameter("logica");
-
-		if (logica != null)
-			switch (logica) {
-			case "veterinario": {
-			     VeterinarioLogica.delete(request,response);
-			 	break;
-				}
-			case "atendente": {
-			     AtendenteLogica.delete(request,response);
-			     break;
-				}
-			case "secretario": {
-			    SecretarioLogica.delete(request,response);
-				break;
-			    }
-			
-			}
+		}
+		return logic;
+		
 	}
 	
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ServletLogic logica = this.invocarLogica(request, response);
+		logica.buscar(request, response);
+		
+	}
 	
-	
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ServletLogic logica = this.invocarLogica(request, response);
+		logica.inserir(request, response);
 
+		
+	}
+	
+	@Override
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ServletLogic logica = this.invocarLogica(request, response);
+		logica.alterar(request, response);
+
+		
+	}
+	
+	@Override
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ServletLogic logica = this.invocarLogica(request, response);
+		logica.remover(request, response);
+
+		
+	}
 
 }
